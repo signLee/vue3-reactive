@@ -26,8 +26,13 @@ function mountElement(vnode, container) {
   const { tag, children, props } = vnode;
   // 将虚拟节点和真实节点创造映射关系
   let el = (vnode.el = nodeOps.createElement(tag));
+  if (props) {
+    for (let key in props) {
+      nodeOps.hostPatchProps(el, key, props[key]);
+    }
+  }
   if (Array.isArray(children)) {
-    mountChildren(children, container);
+    mountChildren(children, el);
   } else {
     nodeOps.hostSetElementText(el, children);
   }

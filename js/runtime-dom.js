@@ -8,7 +8,7 @@ const nodeOps = {
     }
   },
   remove(child) {
-    const parent = child.parentNode;/*  */
+    const parent = child.parentNode; /*  */
     parent && parent.removeChild(child);
   },
   createElement(tag) {
@@ -16,5 +16,22 @@ const nodeOps = {
   },
   hostSetElementText(el, text) {
     el.textContent = text;
+  },
+  //   属性操作
+  hostPatchProps(el, key, value) {
+    if (/^on[^a-z]/.test(key)) {
+      // 事件
+      const eventName = key.slice(2).toLowerCase();
+      el.addEventListener(eventName, value);
+    } else {
+      //   其它属性
+      if (key === "style") {
+        for (let key in value) {
+          el.style[key] = value[key];
+        }
+      }else{
+          el.setAttribute(key,value)
+      }
+    }
   },
 };

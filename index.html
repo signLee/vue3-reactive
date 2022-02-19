@@ -18,11 +18,11 @@
         }
         const vnode = {
             tag: 'div',
-            props: { color: 'yellow' },
+            props: {style:{ border: '1px solid red' }},
             children: [
                 {
                     tag: 'p',
-                    props: { color: 'blue' },
+                    props: {style:{ color: 'blue' }},
                     children: `vue3-计数器` + state.count
                 }, 
                 {
