@@ -19,6 +19,7 @@ function patch(n1, n2, container) {
     mountElement(n2, container);
   } else if (typeof n2.tag === "object") {
     // 组件渲染
+    mountComponent(n2, container);
   }
 }
 // 挂载元素
@@ -37,6 +38,19 @@ function mountElement(vnode, container) {
     nodeOps.hostSetElementText(el, children);
   }
   nodeOps.insert(el, container);
+}
+// 组件挂载
+function mountComponent(vnode, container) {
+  // 根据组件创建一个实例
+  const instance = {
+    vnode,
+    render: null, //当前setup的返回值
+    subTree: null, // render的返回结果
+  };
+  const Component = vnode.tag;
+  instance.render = Component.setup(vnode.props, instance);
+  instance.subTree = instance.render && instance.render();
+  patch(null, instance.subTree, container); // 将组件插入到容器中
 }
 
 function mountChildren(children, container) {

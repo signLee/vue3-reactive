@@ -20,7 +20,7 @@ const nodeOps = {
   //   属性操作
   hostPatchProps(el, key, value) {
     if (/^on[^a-z]/.test(key)) {
-      // 事件
+      // 以on开头的事件
       const eventName = key.slice(2).toLowerCase();
       el.addEventListener(eventName, value);
     } else {

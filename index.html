@@ -16,21 +16,48 @@
         const state = {
             count: 0
         }
+        const myComponent = {
+            setup() {
+                return () => {
+                    return {
+                        tag: 'div',
+                        props: { style: { color: 'pink' } },
+                        children: [
+                            {
+                                tag: 'p',
+                                props: null,
+                                children: '我是一个自定义组件' + state.count
+                            }, {
+                                tag: 'button',
+                                props: {
+                                    onClick: () => { state.count++ }
+                                },
+                                children: '点我啊'
+                            }
+                        ]
+                    }
+                }
+            }
+        }
         const vnode = {
             tag: 'div',
-            props: {style:{ border: '1px solid red' }},
+            props: { style: { border: '1px solid red' } },
             children: [
                 {
                     tag: 'p',
-                    props: {style:{ color: 'blue' }},
+                    props: { style: { color: 'blue' }, id: 'test' },
                     children: `vue3-计数器` + state.count
-                }, 
+                },
                 {
                     tag: 'button',
                     props: {
-                        onclick: () => { alert(state.count) }
+                        onClick: () => { alert(state.count) }
                     },
                     children: '点我啊'
+                }, {
+                    tag: myComponent,
+                    props: null,//组件的属性
+                    children: ''//组件的插槽
                 }
             ]
         }
