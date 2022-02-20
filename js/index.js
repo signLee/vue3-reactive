@@ -49,8 +49,10 @@ function mountComponent(vnode, container) {
   };
   const Component = vnode.tag;
   instance.render = Component.setup(vnode.props, instance);
-  instance.subTree = instance.render && instance.render();
-  patch(null, instance.subTree, container); // 将组件插入到容器中
+  effect(() => {
+    instance.subTree = instance.render && instance.render();
+    patch(null, instance.subTree, container); // 将组件插入到容器中
+  });
 }
 
 function mountChildren(children, container) {
