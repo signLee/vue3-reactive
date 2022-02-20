@@ -10,14 +10,16 @@
 
 <body>
     <div id="app"></div>
+    <script src="./js/reactivity.js"></script>
     <script src="./js/runtime-dom.js"></script>
     <script src="./js/index.js"></script>
     <script>
-        const state = {
+        const state = reactive({
             count: 0
-        }
+        })
+        console.log(state)
         const myComponent = {
-            setup() {
+            setup(props,context) {
                 return () => {
                     return {
                         tag: 'div',
@@ -39,7 +41,8 @@
                 }
             }
         }
-        const vnode = {
+        effect(()=>{
+            const vnode = {
             tag: 'div',
             props: { style: { border: '1px solid red' } },
             children: [
@@ -65,7 +68,8 @@
                 }
             ]
         }
-        render(vnode, document.getElementById("app"))
+            render(vnode, document.getElementById("app"))
+        })
     </script>
 </body>
 
