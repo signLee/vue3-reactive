@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue3.0 Reactive响应式原理</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script src="./js/reactivity.js"></script>
+    <script src="./js/runtime-dom.js"></script>
+    <script src="./js/index.js"></script>
+    <script>
+        const state = reactive({
+            count: 0,
+            name:'sign'
+        })
+        console.log(state)
+        const myComponent = {
+            setup(props,context) {
+                return () => {
+                    return {
+                        tag: 'div',
+                        props: { style: { color: 'pink' } },
+                        children: [
+                            {
+                                tag: 'p',
+                                props: null,
+                                children: '我是一个自定义组件' + state.count
+                            }, {
+                                tag: 'button',
+                                props: {
+                                    onClick: () => { state.name='123' }
+                                },
+                                children: '点我啊' + state.name
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+        effect(()=>{
+            const vnode = {
+            tag: 'div',
+            props: { style: { border: '1px solid red' } },
+            children: [
+                {
+                    tag: 'p',
+                    props: { style: { color: 'blue' }, id: 'test' },
+                    children: `vue3-计数器` + state.count
+                },
+                {
+                    tag: 'button',
+                    props: {
+                        onClick: () => {state.count = 22 }
+                    },
+                    children: '点我啊'
+                }, {
+                    tag: myComponent,
+                    props: null,//组件的属性
+                    children: ''//组件的插槽
+                }, {
+                    tag: myComponent,
+                    props: null,//组件的属性
+                    children: ''//组件的插槽
+                }
+            ]
+        }
+            render(vnode, document.getElementById("app"))
+        })
+    </script>
+</body>
+
+</html>

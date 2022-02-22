@@ -1,6 +1,7 @@
 // 1.初次渲染  2.dom-diff
 function render(vnode, container) {
-  patch(null, vnode, container);
+  patch(container._vnode, vnode, container);
+  container._vnode = vnode; // 保存上一次的虚拟节点
 }
 
 /**
@@ -16,10 +17,42 @@ function patch(n1, n2, container) {
   // 如果是组件的话 tag 可能是一个对象
   if (typeof n2.tag === "string") {
     // 标签
-    mountElement(n2, container);
+    processElement(n1, n2, container);
   } else if (typeof n2.tag === "object") {
     // 组件渲染
     mountComponent(n2, container);
+  }
+}
+//元素比对
+function processElement(n1, n2, container) {
+  if (n1 == null) {
+    mountElement(n2, container) // 初次渲染
+  } else {
+    patchElement(n1, n2, container)// diff操作
+  }
+}
+function patchElement(n1, n2, container) {
+  let el = n2.el = n1.el;//这里不做tag不一样的处理, 节点一样的情况下做节点复用
+  const oldProps = n1.props;
+  const newProps = n2.props;
+  patchProps(el, oldProps, newProps);
+}
+function patchProps(el, oldProps, newProps) {
+  if (oldProps !== newProps) {
+    // 比较属性：如果新的属性和老的属性不一致，则以新的为准
+    for (let key in newProps) {
+      const p = oldProps[key]
+      const n = newProps[key]
+      if (n !== p) {
+        nodeOps.hostPatchProps(el, key, p, n)
+      }
+    }
+    // 如果老的里边有的属性，新的里边没有，则将老的里边多余的删掉
+    for (let key in oldProps) {
+      if (!newProps.hasOwnProperty(key)) {
+        nodeOps.hostPatchProps(el, key, oldProps[key], null)
+      }
+    }
   }
 }
 // 挂载元素
@@ -29,7 +62,7 @@ function mountElement(vnode, container) {
   let el = (vnode.el = nodeOps.createElement(tag));
   if (props) {
     for (let key in props) {
-      nodeOps.hostPatchProps(el, key, props[key]);
+      nodeOps.hostPatchProps(el, key, {}, props[key]);
     }
   }
   if (Array.isArray(children)) {
