@@ -18,16 +18,59 @@
         name: 'sign',
       })
       const oldVnode = {
-        tag: 'div',
-        props: { style: { color: 'red' }, id: 1 },
-        children: 'sign',
+        tag: 'ul',
+        props: null,
+        children: [
+          {
+            tag: 'li',
+            props: { style: { background: 'red' }, key: 'A' },
+            children: 'A',
+          },
+          {
+            tag: 'li',
+            props: { style: { background: 'yellow' }, key: 'B' },
+            children: 'B',
+          },
+          {
+            tag: 'li',
+            props: { style: { background: 'blue' }, key: 'C' },
+            children: 'C',
+          },
+          {
+            tag: 'li',
+            props: { style: { background: 'green' }, key: 'D' },
+            children: 'D',
+          },
+        ],
       }
+
       render(oldVnode, document.getElementById('app'))
       setTimeout(() => {
         const newVnode = {
-          tag: 'div',
-          props: { style: { color: 'blue' } },
-          children: 'sign1',
+          tag: 'ul',
+          props: null,
+          children: [
+            {
+              tag: 'li',
+              props: { style: { background: 'red' }, key: 'A' },
+              children: 'A',
+            },
+            {
+              tag: 'li',
+              props: { style: { background: 'yellow' }, key: 'B' },
+              children: 'B',
+            },
+            {
+              tag: 'li',
+              props: { style: { background: 'blue' }, key: 'C' },
+              children: 'C',
+            },
+            {
+              tag: 'li',
+              props: { style: { background: 'green' }, key: 'D' },
+              children: 'D',
+            },
+          ],
         }
         render(newVnode, document.getElementById('app'))
       }, 1000)
