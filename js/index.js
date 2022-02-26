@@ -66,15 +66,15 @@ function patchKeyedChildren(c1, c2, container) {
     const currentEle = c2[i]
     keyedToNewIndexMap.set(currentEle.props.key, i)
   }
-  // 2.去老的里边找 看看有没有对应的  如果有一样的就复用
-  const newIndexToOldIndexMap = new Array(e2 + 1)
+  // 2.去老的里边找，看有没有对应的。如果有一样的就复用，新的比老的多做添加处理，老的比新的多就删除
+  const newIndexToOldIndexMap = new Array(e2 + 1)// 用于标记新的数组对应的索引是值是否有被patch过
   for (let i = 0; i < e2; i++) {
     newIndexToOldIndexMap[i] = -1
   }
   for (let i = 0; i <= e1; i++) {
     const oldVnode = c1[i]
     let newIndex = keyedToNewIndexMap.get(oldVnode.props.key)
-    if (newIndex == undefined) {
+    if (newIndex == undefined) {// 老的节点在新的里边不存在
       nodeOps.remove(oldVnode.el)
     } else {
       // 复用并且比对属性
@@ -101,7 +101,6 @@ function patchKeyedChildren(c1, c2, container) {
       }
     }
   }
-  // 3.新的比老的多做添加处理，老的比新的多就删除
   // 4.两个key一样的情况 比较属性，移动
 }
 
