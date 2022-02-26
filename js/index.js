@@ -79,12 +79,12 @@ function patchKeyedChildren(c1, c2, container) {
       nodeOps.remove(oldVnode.el);
     } else {
       // 复用并且比对属性
-      newIndexToOldIndexMap[newIndex] = i + 1;
+      newIndexToOldIndexMap[newIndex] = i + 1;// 算法内部没有考虑值为0的情况，所以要+1
       patch(oldVnode, c2[newIndex], container);
     }
   }
   // 以上方法仅仅是比对和删除无用节点，没有移动操作
-  let sequence = getSequence(newIndexToOldIndexMap); // 两个key一样的情况 比较属性，移动
+  let sequence = getSequence(newIndexToOldIndexMap); // 获取最长递增子序列的索引
   let j = sequence.length - 1;
   for (let i = e2; i >= 0; i--) {
     let currentEle = c2[i];
@@ -105,37 +105,41 @@ function patchKeyedChildren(c1, c2, container) {
 }
 
 function getSequence(arr) {
-  const result = [0];
-  let p = arr.slice();
+  const result = [0];//存的是索引
+  let p = arr.slice();//避免原数组的更改，计算过程中需要有值的替换
   let len = arr.length;
   let i, j, u, v, c;
   for (i = 0; i < len; i++) {
     const arrI = arr[i];
     if (arrI !== 0) {
-      j = result[result.length - 1];
+      j = result[result.length - 1];// 当前项和最后一项比较
+      // 当前的值比最后一项大，则往result中push
       if (arr[j] < arrI) {
-        p[i] = j;
+        p[i] = j;// 将最后一项存到p对应的索引上
         result.push(i);
         continue;
       }
-      u = 0;
-      v = result.length - 1;
-      while (u < v) {
-        c = ((u + v) / 2) | 0;
+      // 当前的值比最后一项小，去result中查找第一个比当前值大的数
+      u = 0;// 二分插件起始值
+      v = result.length - 1;//二分查找终点值
+      while (u < v) {// 起始位置和结束位置相等则结束查找
+        c = ((u + v) / 2) | 0;// 取整
         if (arr[result[c]] < arrI) {
-          u = c + 1;
+          u = c + 1;//查找数组的后面部分的数据
         } else {
-          v = c;
+          v = c;//查找数组前面部分的数据
         }
       }
+      // 循环结束，这个时候的u=v
       if (arrI < arr[result[u]]) {
-        if (u > 0) {
+        if (u > 0) {// 第一个不能替换
           p[i] = result[u - 1];
         }
-        result[u] = i;
+        result[u] = i;//不对原数组进行更改，只做索引存储
       }
     }
   }
+  // p中存储的索引的值赋值给result
   u = result.length;
   v = result[u - 1];
   while (u-- > 0) {
