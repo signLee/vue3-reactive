@@ -133,7 +133,7 @@ function getSequence(arr) {
       // 循环结束，这个时候的u=v
       if (arrI < arr[result[u]]) {
         if (u > 0) {// 第一个不能替换
-          p[i] = result[u - 1];
+          p[i] = result[u - 1];//保留之前的值
         }
         result[u] = i;//不对原数组进行更改，只做索引存储
       }
