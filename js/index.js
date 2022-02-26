@@ -61,12 +61,12 @@ function patchKeyedChildren(c1, c2, container) {
   let e2 = c2.length - 1
   // 内部优化处理  头头比较  尾尾比较  头尾比较  尾头比较
   const keyedToNewIndexMap = new Map()
-  // 1.根据新节点生成一个key->index的映射表
+  // 根据新节点生成一个key->index的映射表
   for (let i = 0; i <= e2; i++) {
     const currentEle = c2[i]
     keyedToNewIndexMap.set(currentEle.props.key, i)
   }
-  // 2.去老的里边找，看有没有对应的。如果有一样的就复用，新的比老的多做添加处理，老的比新的多就删除
+  // 去老的里边找，看有没有对应的。如果有一样的就复用，新的比老的多做添加处理，老的比新的多就删除
   const newIndexToOldIndexMap = new Array(e2 + 1)// 用于标记新的数组对应的索引是值是否有被patch过
   for (let i = 0; i < e2; i++) {
     newIndexToOldIndexMap[i] = -1
@@ -82,7 +82,7 @@ function patchKeyedChildren(c1, c2, container) {
       patch(oldVnode, c2[newIndex], container)
     }
   }
-  let sequence = getSequence(newIndexToOldIndexMap)
+  let sequence = getSequence(newIndexToOldIndexMap)// 两个key一样的情况 比较属性，移动
   let j = sequence.length - 1
   // 以上方法仅仅是比对和删除无用节点，没有移动操作
   for (let i = e2; i >= 0; i--) {
@@ -101,7 +101,7 @@ function patchKeyedChildren(c1, c2, container) {
       }
     }
   }
-  // 4.两个key一样的情况 比较属性，移动
+  
 }
 
 function getSequence(arr) {
