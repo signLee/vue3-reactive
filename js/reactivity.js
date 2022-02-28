@@ -1,9 +1,9 @@
-let activieEffect;
+let activeEffect;
 function effect(fn) {
   // effect需要默认执行一次
-  activieEffect = fn; //数据变更的时候会调用这个方法
+  activeEffect = fn; //数据变更的时候会调用这个方法
   fn();
-  activieEffect = null
+  activeEffect = null
 }
 // 默认值代理第一层
 function reactive(target) {
@@ -31,8 +31,8 @@ function track(target, key) {
   if (!deps) {
     depsMap.set(key, (deps = new Set()))
   }
-  if (activieEffect && !deps.has(activieEffect)) {
-    deps.add(activieEffect)
+  if (activeEffect && !deps.has(activeEffect)) {
+    deps.add(activeEffect)
   }
   console.log(targetMap)
 }
